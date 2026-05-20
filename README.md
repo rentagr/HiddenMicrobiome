@@ -102,7 +102,7 @@ Currently, the project focuses on the following datasets:
 
 ## BMD
 **Mean relative abundance'**
-![Mean relative abundance'](./images/BMD/Pasted%20image.png)
+![Mean relative abundance'](./images/BMD/BMD_MRA.png)
 
 **Table: Top discriminatory contigs between normal and low bone density groups identified by Random Forest (MetaFX results)**
 
@@ -118,7 +118,7 @@ Currently, the project focuses on the following datasets:
 
 ## Fracture
 **Mean relative abundance**
-![Mean relative abundance](./images/Fracture/Pasted%20image.png)
+![Mean relative abundance](./images/Fracture/Fracture_MRA.png)
 
 **Table: Top discriminatory contigs between normal and low bone density groups identified by Random Forest (MetaFX results)**
 
