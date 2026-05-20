@@ -81,9 +81,8 @@ Currently, the project focuses on the following datasets:
 3. **Taxonomic profiling** – `Kraken2` (k‑mer based) and `MetaPhlAn` (marker genes) –> *Steps/Step1_annotation.ipunb*
 4. **Feature extraction**
       - taxonomic abundances (`Kraken2`, `MetaPhlAn` –> *Steps/Step1_annotation.ipunb/substeps 1.5 and 1.6*
-      - group‑specific k‑mers (`MetaFX`) –> *Steps/Step2_MetaFX_Mash.ipunb/substeps*
-5. **Genomic distance estimation** – `Mash` (MinHash‑based Jaccard index) –> *Steps/Step2_MetaFX_Mash.ipunb/substeps*
-6. **Statistical analysis & visualisation** – PCA, alpha diversity (Shannon index), beta diversity (`Mash` distances tab), differential abundance –> *Steps/Step1_annotation.ipunb/substeps from 1.7 and /Step2_MetaFX_Mash.ipunb/substeps*
+5. **Genomic distance estimation** – `Mash` (MinHash‑based Jaccard index) –> *Steps/Step2_MetaFX_Mash.ipunb/substep 2.2*
+6. **Statistical analysis & visualisation** – PCA, alpha diversity (Shannon index), beta diversity (`Mash` distances tab), mean relative abundance –> *Steps/Step1_annotation.ipunb/substeps from 1.7 and /Step2_MetaFX_Mash.ipunb/substeps from 2.2*
 7. **Machine learning** –> *Steps/Step3_validation.ipunb*
       - Random Forest (`scikit‑learn`) on taxonomic profiles
       - Random Forest (`MetaFX`) on k‑mer features
