@@ -37,17 +37,17 @@ The pipeline is implemented primarily in **Bash** and **Python** (for data proce
 
 # Tools And Technologies
 
-| Tool / Library      | Purpose                                                                                | Language      |
-|---------------------|----------------------------------------------------------------------------------------|---------------|
-| FastQC              | Quality control of raw reads                                                           | Bash          |
-| Trimmomatic         | Read trimming and filtering                                                            | Bash          |
-| Kraken2             | Taxonomic classification using k‑mers                                                  | Bash          |
-| MetaPhlAn           | Marker‑based taxonomic profiling                                                       | Bash          |
-| MetaFX              | k‑mer‑based feature extraction, group‑specific k‑mers, classification (Random Forest)  | Bash / Python |
-| Mash                | MinHash‑based genomic distance estimation (Jaccard index)                              | Bash          |
-| Python              | Data manipulation, stats, ML models                                                    | Python        |
-| - scikit‑learn        | Machine learning models                                                              | Python        |
-| - matplotlib / seaborn| Visualisation (PCA, alpha diversity, etc.)                                           | Python        |
+| Tool / Library        | Purpose                                                                                | Language      |
+|-----------------------|----------------------------------------------------------------------------------------|---------------|
+| FastQC                | Quality control of raw reads                                                           | Bash          |
+| Trimmomatic           | Read trimming and filtering                                                            | Bash          |
+| Kraken2               | Taxonomic classification using k‑mers                                                  | Bash          |
+| MetaPhlAn             | Marker‑based taxonomic profiling                                                       | Bash          |
+| MetaFX                | k‑mer‑based feature extraction, group‑specific k‑mers, classification (Random Forest)  | Bash / Python |
+| Mash                  | MinHash‑based genomic distance estimation (Jaccard index)                              | Bash          |
+| Python                | Data manipulation, stats, ML models                                                    | Python        |
+| - scikit‑learn        | Machine learning models                                                                | Python        |
+| - matplotlib / seaborn| Visualisation (PCA, alpha diversity, etc.)                                             | Python        |
 
 ---
 
@@ -64,9 +64,9 @@ Currently, the project focuses on the following datasets:
   *Data preprocessing and feature extraction steps are in the Jupyter notebook: Steps/Step0_data preproc.ipynb, available in this repository.*
 - **Result validation**  
     - To evaluate the predictive performance of the models, the labeled cohort (56 samples) was split into *training (44 samples)* and *test (12 samples)* sets.  
-       - The test set contained **4 low-BMD samples** and **8 normal-BMD samples**.
+       - The test set contained 4 low-BMD samples and 8 normal-BMD samples.
 
-  *Bone Mineral Density (BMD) – a measure of bone strength and a key indicator for diagnosing osteoporosis*
+  **Bone Mineral Density (BMD)** – a measure of bone strength and a key indicator for diagnosing osteoporosis
 
     - Two approaches were compared:
         1. **Kraken2** – taxonomic profiling, filtering of taxa present in <5% of samples.
@@ -80,11 +80,11 @@ Currently, the project focuses on the following datasets:
 2. **Trimming** – `Trimmomatic`
 3. **Taxonomic profiling** – `Kraken2` (k‑mer based) and `MetaPhlAn` (marker genes) –> *Steps/Step1_annotation.ipunb*
 4. **Feature extraction**
-      - taxonomic abundances (`Kraken2`, `MetaPhlAn`–> *Steps/Step1_annotation.ipunb/substeps 1.5 and 1.6*)
-      - group‑specific k‑mers (`MetaFX`)
-5. **Genomic distance estimation** – `Mash` (MinHash‑based Jaccard index)
-6. **Statistical analysis & visualisation** – PCA, alpha diversity (Shannon index), beta diversity (`Mash` distances tab), differential abundance
-7. **Machine learning** 
+      - taxonomic abundances (`Kraken2`, `MetaPhlAn` –> *Steps/Step1_annotation.ipunb/substeps 1.5 and 1.6*
+      - group‑specific k‑mers (`MetaFX`) –> *Steps/Step2_MetaFX_Mash.ipunb/substeps*
+5. **Genomic distance estimation** – `Mash` (MinHash‑based Jaccard index) –> *Steps/Step2_MetaFX_Mash.ipunb/substeps*
+6. **Statistical analysis & visualisation** – PCA, alpha diversity (Shannon index), beta diversity (`Mash` distances tab), differential abundance –> *Steps/Step1_annotation.ipunb/substeps from 1.7 and /Step2_MetaFX_Mash.ipunb/substeps*
+7. **Machine learning** –> *Steps/Step3_validation.ipunb*
       - Random Forest (`scikit‑learn`) on taxonomic profiles
       - Random Forest (`MetaFX`) on k‑mer features
       - 5‑fold cross‑validation and train/test split
