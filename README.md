@@ -27,8 +27,8 @@ The pipeline is implemented primarily in **Bash** and **Python** (for data proce
   - Selection and preprocessing of public WGS datasets.
   - Extraction of significant features via:
     - **Taxonomic profiling** (Kraken2, MetaPhlAn)
-    - **Functional profiling** 
-    - **k‑mer based analysis**
+    - **k‑mer based feature extraction** (MetaFX) 
+    - **Genomic distance estimation** (Mash)
   - Training and evaluation of classification models.
   - Development of a reproducible, modular analysis pipeline.
   - Annotation and biological interpretation of identified markers.
@@ -37,15 +37,17 @@ The pipeline is implemented primarily in **Bash** and **Python** (for data proce
 
 # Tools And Technologies
 
-| Tool / Library      | Purpose                                      | Language   |
-|---------------------|----------------------------------------------|------------|
-| FastQC              | Quality control of raw reads                 | Bash       |
-| Trimmomatic         | Read trimming and filtering                  | Bash       |
-| Kraken2             | Taxonomic classification using k‑mers        | Bash       |
-| MetaPhlAn           | Marker‑based taxonomic profiling             | Bash       |
-| Python              | Data manipulation, stats, ML models          | Python     |
-| - scikit‑learn        | Machine learning models                    | Python     |
-| - matplotlib / seaborn| Visualisation (PCA, alpha diversity, etc.) | Python     |
+| Tool / Library      | Purpose                                                                                | Language      |
+|---------------------|----------------------------------------------------------------------------------------|---------------|
+| FastQC              | Quality control of raw reads                                                           | Bash          |
+| Trimmomatic         | Read trimming and filtering                                                            | Bash          |
+| Kraken2             | Taxonomic classification using k‑mers                                                  | Bash          |
+| MetaPhlAn           | Marker‑based taxonomic profiling                                                       | Bash          |
+| MetaFX              | k‑mer‑based feature extraction, group‑specific k‑mers, classification (Random Forest)  | Bash / Python |
+| Mash                | MinHash‑based genomic distance estimation (Jaccard index)                              | Bash          |
+| Python              | Data manipulation, stats, ML models                                                    | Python        |
+| - scikit‑learn        | Machine learning models                                                              | Python        |
+| - matplotlib / seaborn| Visualisation (PCA, alpha diversity, etc.)                                           | Python        |
 
 ---
 
@@ -53,12 +55,13 @@ The pipeline is implemented primarily in **Bash** and **Python** (for data proce
 
 Currently, the project focuses on the following datasets:
 
+*(more details about dataset About_dataset.md)*
 - **Osteoporosis study**  
-  - 56 human (female) gut samples from a public US database.  
-    - 21 cases (with fracture), 38 healthy (without fracture).  
-    - 21 cases (with osteoporosis or osteopinia), 38 healthy (without osteoporosis or osteopinia)
+  - 56 human (female) gut microbiome samples from a public US database.  
+    - 20 cases (with fracture), 37 healthy (without fracture).  
+    - 20 cases (with osteoporosis or osteopinia), 37 healthy (without osteoporosis or osteopinia)
     
-  *All steps from data preprocessing to feature extraction, model training, validation, and interpretation are implemented in the Jupyter notebook step_by_step.ipynb, available in this repository.*
+  *Data preprocessing and feature extraction steps are in the Jupyter notebook: Steps/Step0_data preproc.ipynb, available in this repository.*
 - **Result validation**  
     - To evaluate the predictive performance of the models, the labeled cohort (56 samples) was split into *training (44 samples)* and *test (12 samples)* sets.  
        - The test set contained **4 low-BMD samples** and **8 normal-BMD samples**.
@@ -70,25 +73,31 @@ Currently, the project focuses on the following datasets:
         2. **MetaFX with preprocessing** – filtering of k‑mers present in <5% of training samples.
 ---
 
+
 # Pipeline Overview
 
 1. **Quality control** – `FastQC`
 2. **Trimming** – `Trimmomatic`
-3. **Taxonomic profiling** – `Kraken2` (k‑mer based) and `MetaPhlAn` (marker genes)
-4. **Feature extraction** – taxonomic abundances, functional profiles, k‑mer frequencies
-5. **Statistical analysis & visualisation** – PCA, alpha diversity, differential abundance
-6. **Machine learning** – classification models (e.g., Random Forest, SVM) with cross‑validation
-7. **Marker interpretation** – annotation of top‑ranked features using NCBI (blastn, blastx) and leterature
+3. **Taxonomic profiling** – `Kraken2` (k‑mer based) and `MetaPhlAn` (marker genes) –> *Steps/Step1_annotation.ipunb*
+4. **Feature extraction**
+      - taxonomic abundances (`Kraken2`, `MetaPhlAn`–> *Steps/Step1_annotation.ipunb/substeps 1.5 and 1.6*)
+      - group‑specific k‑mers (`MetaFX`)
+5. **Genomic distance estimation** – `Mash` (MinHash‑based Jaccard index)
+6. **Statistical analysis & visualisation** – PCA, alpha diversity (Shannon index), beta diversity (`Mash` distances tab), differential abundance
+7. **Machine learning** 
+      - Random Forest (`scikit‑learn`) on taxonomic profiles
+      - Random Forest (`MetaFX`) on k‑mer features
+      - 5‑fold cross‑validation and train/test split
+
+8. **Marker interpretation** – annotation of top‑ranked features using NCBI (blastn, blastx) and leterature
 
 ---
 
-# Getting Started
-
-## Prerequisites
+# Prerequisites
 
 - **Python 3.8+** with packages: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, etc.
 - **Bash** environment (Linux / macOS / WSL)
-- External tools: `FastQC`, `Trimmomatic`, `Kraken2`, `MetaPhlAn` (see their respective installation guides)
+- External tools: `FastQC`, `Trimmomatic`, `Kraken2`, `MetaPhlAn`, `MetaFX`, `Mash` (see their respective installation guides)
 
 # Results
 
