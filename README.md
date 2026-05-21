@@ -5,7 +5,8 @@
 
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
 [![Bash](https://img.shields.io/badge/bash-5.0%2B-green)](https://www.gnu.org/software/bash/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20130730.svg)](https://doi.org/10.5281/zenodo.20130730)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20325514.svg)](https://doi.org/10.5281/zenodo.20325514)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
 ---
 
@@ -55,7 +56,7 @@ The pipeline is implemented primarily in **Bash** and **Python** (for data proce
 
 Currently, the project focuses on the following datasets:
 
-*(more details about dataset About_dataset.md)*
+*(more details about dataset and original publication in [About_dataset.md](About_dataset.md))*
 - **Osteoporosis study**  
   - 56 human (female) gut microbiome samples from a public US database.  
     - 20 cases (with fracture), 37 healthy (without fracture).  
@@ -101,9 +102,27 @@ Currently, the project focuses on the following datasets:
 
 # Results
 
+## Alpha and beta diversity analysis
+
+To assess whether global microbial community structure differs between disease groups, we calculated **alpha diversity** (Shannon index) and **beta diversity** (Mash distances, Jaccard index) using both Kraken2 and MetaPhlAn taxonomic profiles.
+
+- **Alpha diversity:** No statistically significant differences were observed between healthy and diseased individuals (neither for BMD or for fracture groups), regardless of the annotation method. A weak trend towards lower diversity in cases was noted, which qualitatively agrees with the concept of dysbiosis, but the differences did not reach significance.
+
+![Alpha diversity BMD](./images/BMD/BMD_alpha_diversity.png)
+
+![Alpha diversity Fracture](./images/Fracture/Fracture_alfa_diversity.png)
+
+- **Beta diversity (Mash):** Principal coordinate analysis of Mash distances did not reveal any clear clustering by bone density or fracture status. This is consistent with the observation that mean relative abundances of individual taxa showed largely indistinguishable profiles between health and disease. The lack of clustering likely reflects the high heterogeneity of gut microbiota among patients with low BMD or fractures.
+
+![Beta diversity (Mash)](./images/BMD/dendrogram_combined.png)
+
+Thus, standard diversity metrics alone are insufficient to discriminate the groups, motivating the use of machine learning approaches on k‑mer‑derived features.
+
+---
+
 ## BMD
-**Mean relative abundance'**
-![Mean relative abundance'](./images/BMD/BMD_MRA.png)
+**Mean relative abundance Kraken2 annotation results**
+![Mean relative abundance](./images/BMD/BMD_MRA.png)
 
 **Table: Top discriminatory contigs between normal and low bone density groups identified by Random Forest (MetaFX results)**
 
@@ -115,10 +134,10 @@ Currently, the project focuses on the following datasets:
 | `low_605` | *[Clostridium] leptum* (metagenome-assembled) | Histidine kinase sensor (MFQ9845483.1) | Two-component signal transduction system, adaptation to stress/nutrients; role in bone density unclear | none |
 
 ---
-*For a complete list of top‑20 contigs, please refer to [top20_bmd.fasta](https://github.com/rentagr/HiddenMicrobiome/releases/download/v1.0/top20_bmd.fasta) in the repository.*
+*For a complete list of top‑20 contigs, please refer to [top20_bmd.fasta](https://zenodo.org/records/20325514/files/top20_bmd.fasta?download=1) in the repository.*
 
 ## Fracture
-**Mean relative abundance**
+**Mean relative abundance on Kraken2 annotation results**
 ![Mean relative abundance](./images/Fracture/Fracture_MRA.png)
 
 **Table: Top discriminatory contigs between normal and low bone density groups identified by Random Forest (MetaFX results)**
@@ -128,14 +147,14 @@ Currently, the project focuses on the following datasets:
 | `case_474` | *Mediterraneibacter massiliensis* | GTPase ObgE (WP_117993920.1) | P-loop GTPase involved in ribosome assembly, cell cycle, cell wall synthesis, and stress response. Isolated from faeces of an obese patient. No direct link to bone pathology. | [PMID 29855844](https://pubmed.ncbi.nlm.nih.gov/29855844/) |
 | `case_263` | *Bacteroides luhongzhouii* and *Bacteroides zhangwenhongii* (two novel species) | not specified (16S rRNA identification) | New species of genus *Bacteroides* isolated from faeces of healthy humans. Typical gut commensals, no signs of pathogenicity. | [CP182860](https://www.ncbi.nlm.nih.gov/nucleotide/CP182860.1) (species description) |
 | `case_90` | *Bacteroides* sp. A1C1 (species not determined) | not specified | Gram-negative anaerobic rod isolated from cat faeces. Likely incidental detection; clinical significance for humans unclear. | [PRJNA522935](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA522935) |
-| `case_108` | *Bacteroides thetaiotaomicron* | ATP-dependent zinc metalloprotease FtsH (CAK7001341.1) | Universal protease essential for cell division, stress resistance, and membrane homeostasis. Key gut commensal, beneficial for polysaccharide breakdown. | none (protein link available) |
+| `case_108` | *Bacteroides thetaiotaomicron* | ATP-dependent zinc metalloprotease FtsH (CAK7001341.1) | Universal protease essential for cell division, stress resistance, and membrane homeostasis. Key gut commensal, beneficial for polysaccharide breakdown. | [PMC9020784](https://pmc.ncbi.nlm.nih.gov/articles/PMC9020784/) |
 | `case_22` | *Phocaeicola vulgatus* (formerly *Bacteroides vulgatus*) | not specified | Candidate strain NB1000S for treatment of hyperoxaluria (oxalate reduction). May indirectly affect calcium metabolism, but no direct bone link proven. | [PRJNA1211572](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1211572) |
 | `case_16` | *Bacteroides ovatus* | not specified | Typical gut commensal involved in dietary fibre fermentation. Neutral microorganism, not associated with bone pathology. | [CP134818](https://www.ncbi.nlm.nih.gov/nucleotide/CP134818.1) |
 
 *Note*: In the case (fracture) group, no bacterium with a proven direct link to osteomyelitis or bone resorption was found, in contrast to the low bone density group where Ruthenibacterium lactatiformans was present. The dominant bacteria are common commensals of the genus Bacteroides.
 
 ---
-*For a complete list of top‑20 contigs, please refer to [top20_fracture.fasta](https://github.com/rentagr/HiddenMicrobiome/releases/download/v1.0/top20_fracture.fasta) in the repository.*
+*For a complete list of top‑20 contigs, please refer to [top20_fracture.fasta](https://zenodo.org/records/20325514/files/top20_fracture.fasta?download=1) in the repository.*
 
 ## Validation results 
 
@@ -143,6 +162,14 @@ Currently, the project focuses on the following datasets:
 |--------|----------|--------------|----------------|------------------------|---------------------------|
 | Kraken2 | **0.833** (10/12) | 0.50 | 1.00 | 2 | 8 |
 | MetaFX + preprocessing | 0.750 (9/12) | 0.25 | 1.00 | 1 | 8 |
+
+### External validation on an independent arthritis cohort
+
+To test whether the k‑mer‑based markers discovered in the osteopinia cohort generalise to a different bone‑related pathology, we applied the same feature extraction pipeline (using the feature directory wd_unique_bmd) to raw FASTQ files from [a colleague studying arthritis](https://github.com/dar1a-da/HiddenMicrobiota/tree/dev). The Random Forest model trained on the osteopinia training set was then used to predict disease status for the arthritis samples.
+
+The model correctly classified **80%** of the arthritis samples (as healthy), indicating a good ability to discriminate health vs disease across different skeletal disorders. 
+
+This result supports the potential of the identified k‑mer signatures as general markers of bone/joint pathology, although further validation on larger and more homogeneous cohorts is needed.
 
 ### Detailed error analysis
 
@@ -156,7 +183,7 @@ Thus, the performance of **Kraken2** and **MetaFX with preprocessing** is **comp
 
 The consistently misclassified low‑BMD samples (`SRR25006884` and `SRR25006909`) might have bone density reduction driven by non‑microbiome factors (e.g., genetic connective tissue disorders), which warrants further clinical investigation.
 
-## Top‑20 contigs discriminating low/normal groups (trained on the training set)
+## MetaFX Top‑20 contigs discriminating low/normal groups (trained on the training set)
 
 Using the Random Forest model from **MetaFX with preprocessing**, the most important features (k‑mers assembled into contigs) were extracted and annotated via BLAST. Selected results are shown below; the full list of 20 contigs is available in Supplementary Materials.
 
@@ -174,12 +201,39 @@ The presence of *Dorea longicatena* (contig `low_87`) is particularly interestin
 This suggests that the low‑BMD patient group is microbially heterogeneous, which could explain why some low‑BMD samples were misclassified by both methods.
 
 ---
-*For a complete list of top‑20 contigs, please refer to [top20_contigs_metafx_preproc.fasta]() in the repository.*
+*For a complete list of top‑20 contigs, please refer to [top20_contigs_metafx_preproc.fasta](https://zenodo.org/records/20325514/files/top20_contigs_metafx_preproc.fasta?download=1) in the repository.*
+
+## Kraken2 Top‑10 taxa discriminating low/normal groups (trained on the training set)
+
+The table below shows the top‑10 most important features (taxa) from the Random Forest classifier trained on Kraken2 species‑level relative abundances. 
+
+| Taxon | Importance |
+|-------|------------|
+| *Clostridium saccharoperbutylacetonicum* | 0.013596 |
+| *Clostridium gelidum* | 0.011232 |
+| *Macellibacteroides fermentans* | 0.010464 |
+| *Methylophaga nitratireducenticrescens* | 0.009682 |
+| *Pedobacter* sp. MW01-1-1 | 0.009170 |
+| *Spinacia oleracea* (spinach) | 0.007887 |
+| *Heyndrickxia oleronia* | 0.007867 |
+| *Clostridium kluyveri* | 0.007701 |
+| *Gilliamella* sp. ESL0443 | 0.007326 |
+| *Nocardioides campestrisoli* | 0.007214 |
+
+All importance scores are low (<0.014), suggesting that no single taxon dominates classification. *Spinacia oleracea* (spinach) is likely a contaminant or misassignment. Several *Clostridium* species may be biologically relevant as butyrate producers, but these results should be validated on larger cohorts.
+
+*Clostridium saccharoperbutylacetonicum* is a well‑known industrial producer of butanol and a key microorganism in the ABE (acetone‑butanol‑ethanol) fermentation process for [biofuel and chemical production](https://doi.org/10.3390/catal9110962).
+
+*Clostridium kluyveri* is a unique bacterium capable of growing on ethanol and acetate as sole energy sources, producing butyric and caproic acids. It is a model organism for studying fatty acid synthesis and hydrogen metabolism. Its genome contains genes for a novel siderophore, which may influence iron availability – a factor that can indirectly [affect bone health](https://doi.org/10.1073/pnas.0711093105).
+
+*Pedobacter* sp. MW01‑1‑1 belongs to a genus commonly found on amphibian skin. Some Pedobacter strains can [inhibit the growth of pathogenic fungi, and they also exhibit a broad spectrum of antibiotic resistance](https://doi.org/10.1128/mra.01185-23). Their role in the human gut, if any, remains unclear, but their presence in the model may reflect environmental or dietary signals.
 
 ## Contributing
 Contributions, issues, and feature requests are welcome! 
 
-## Contacts
+## Contacts and links
 Project Link: https://github.com/rentagr/HiddenMicrobiome
+
+[ZENODO repository with suplementary materials](https://doi.org/10.5281/zenodo.20325514)
 
 
