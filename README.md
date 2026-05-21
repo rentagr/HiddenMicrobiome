@@ -47,7 +47,7 @@ The pipeline is implemented primarily in **Bash** and **Python** (for data proce
 | Mash                  | MinHash‑based genomic distance estimation (Jaccard index)                              | Bash          |
 | Python                | Data manipulation, stats, ML models                                                    | Python        |
 | - scikit‑learn        | Machine learning models                                                                | Python        |
-| - matplotlib / seaborn| Visualisation (PCA, alpha diversity, etc.)                                             | Python        |
+| - matplotlib / seaborn| Visualisation (PCA, t-SNE, alpha diversity, etc.)                                         | Python        |
 
 ---
 
@@ -80,9 +80,10 @@ Currently, the project focuses on the following datasets:
 2. **Trimming** – `Trimmomatic`
 3. **Taxonomic profiling** – `Kraken2` (k‑mer based) and `MetaPhlAn` (marker genes) –> *Steps/Step1_annotation.ipunb*
 4. **Feature extraction**
-      - taxonomic abundances (`Kraken2`, `MetaPhlAn` –> *Steps/Step1_annotation.ipunb/substeps 1.5 and 1.6*
+      - taxonomic abundances (`Kraken2`, `MetaPhlAn`) –> *Steps/Step1_annotation.ipunb/substeps 1.5 and 1.6*
+      - k‑mer features (`MetaFX`) *Steps/Step2_MetaFX_Mash.ipunb/substep 2.1*
 5. **Genomic distance estimation** – `Mash` (MinHash‑based Jaccard index) –> *Steps/Step2_MetaFX_Mash.ipunb/substep 2.2*
-6. **Statistical analysis & visualisation** – PCA, alpha diversity (Shannon index), beta diversity (`Mash` distances tab), mean relative abundance –> *Steps/Step1_annotation.ipunb/substeps from 1.7 and /Step2_MetaFX_Mash.ipunb/substeps from 2.2*
+6. **Statistical analysis & visualisation** – PCA, t-SNE, alpha diversity (Shannon index), beta diversity (`Mash` distances tab), mean relative abundance –> *Steps/Step1_annotation.ipunb/substeps from 1.7 and /Step2_MetaFX_Mash.ipunb/substeps from 2.2*
 7. **Machine learning** –> *Steps/Step3_validation.ipunb*
       - Random Forest (`scikit‑learn`) on taxonomic profiles
       - Random Forest (`MetaFX`) on k‑mer features
