@@ -62,7 +62,7 @@ Currently, the project focuses on the following datasets:
     - 20 cases (with fracture), 37 healthy (without fracture).  
     - 20 cases (with osteoporosis or osteopinia), 37 healthy (without osteoporosis or osteopinia)
     
-  *Data preprocessing and feature extraction steps are in the Jupyter notebook: [Steps/Step0_data preproc.ipynb](Step0_data_preproc.ipynb), available in this repository.*
+  *Data preprocessing and feature extraction steps are in the Jupyter notebook: [Steps/Step0_preproc.ipynb](Step0_preproc.ipynb), available in this repository.*
 - **Result validation**  
     - To evaluate the predictive performance of the models, the labeled cohort (56 samples) was split into *training (44 samples)* and *test (12 samples)* sets.  
        - The test set contained 4 low-BMD samples and 8 normal-BMD samples.
