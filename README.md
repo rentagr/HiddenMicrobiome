@@ -62,7 +62,7 @@ Currently, the project focuses on the following datasets:
     - 20 cases (with fracture), 37 healthy (without fracture).  
     - 20 cases (with osteoporosis or osteopinia), 37 healthy (without osteoporosis or osteopinia)
     
-  *Data preprocessing and feature extraction steps are in the Jupyter notebook: [Steps/Step0_preproc.ipynb](Step0_preproc.ipynb), available in this repository.*
+  *Data preprocessing and feature extraction steps are in the Jupyter notebook: [Steps/Step0_preproc.ipynb](/Steps/Step0_preproc.ipynb), available in this repository.*
 - **Result validation**  
     - To evaluate the predictive performance of the models, the labeled cohort (56 samples) was split into *training (44 samples)* and *test (12 samples)* sets.  
        - The test set contained 4 low-BMD samples and 8 normal-BMD samples.
@@ -79,13 +79,13 @@ Currently, the project focuses on the following datasets:
 
 1. **Quality control** – `FastQC`
 2. **Trimming** – `Trimmomatic`
-3. **Taxonomic profiling** – `Kraken2` (k‑mer based) and `MetaPhlAn4` (marker genes) –> *[Steps/Step1_annotation.ipunb](Step1_annotation.ipunb)*
+3. **Taxonomic profiling** – `Kraken2` (k‑mer based) and `MetaPhlAn4` (marker genes) –> *[Steps/Step1_annotation.ipynb](/Steps/Step1_annotation.ipynb)*
 4. **Feature extraction**
-      - taxonomic abundances (`Kraken2`, `MetaPhlAn4`) –> *[Steps/Step1_annotation.ipunb/substeps 1.5 and 1.6](Step1_annotation.ipunb)*
-      - k‑mer features (`MetaFX`) –> *[Steps/Step2_MetaFX_Mash.ipunb/substep 2.1](Step2_MetaFX_Mash.ipunb)*
-5. **Genomic distance estimation** – `Mash` (MinHash‑based Jaccard index) –> *[Steps/Step2_MetaFX_Mash.ipunb/substep 2.2](Step2_MetaFX_Mash.ipunb)*
-6. **Statistical analysis & visualisation** – PCA, t-SNE, alpha diversity (Shannon index), beta diversity (`Mash` distances tab), mean relative abundance –> *[Steps/Step1_annotation.ipunb/substeps from 1.7](Step1_annotation.ipunb) and [/Step2_MetaFX_Mash.ipunb/substeps from 2.2](Step2_MetaFX_Mash.ipunb)*
-7. **Machine learning** –> *[Steps/Step3_validation.ipunb](Step3_validation.ipunb)*
+      - taxonomic abundances (`Kraken2`, `MetaPhlAn4`) –> *[Steps/Step1_annotation.ipynb/substeps 1.5 and 1.6](/Steps/Step1_annotation.ipynb)*
+      - k‑mer features (`MetaFX`) –> *[Steps/Step2_MetaFX_Mash.ipynb/substep 2.1](/Steps/Step2_MetaFX_Mash.ipynb)*
+5. **Genomic distance estimation** – `Mash` (MinHash‑based Jaccard index) –> *[Steps/Step2_MetaFX_Mash.ipynb/substep 2.2](/Steps/Step2_MetaFX_Mash.ipynb)*
+6. **Statistical analysis & visualisation** – PCA, t-SNE, alpha diversity (Shannon index), beta diversity (`Mash` distances tab), mean relative abundance –> *[Steps/Step1_annotation.ipynb/substeps from 1.7](/Steps/Step1_annotation.ipynb) and [/Step2_MetaFX_Mash.ipynb/substeps from 2.2](/Steps/Step2_MetaFX_Mash.ipynb)*
+7. **Machine learning** –> *[Steps/Step3_validation.ipynb](/Steps/Step3_validation.ipynb)*
       - Random Forest (`scikit‑learn`) on taxonomic profiles
       - Random Forest (`MetaFX`) on k‑mer features
       - 5‑fold cross‑validation and train/test split
