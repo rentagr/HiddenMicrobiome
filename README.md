@@ -40,15 +40,15 @@ The pipeline is implemented primarily in **Bash** and **Python** (for data proce
 
 | Tool / Library        | Purpose                                                                                | Language      |
 |-----------------------|----------------------------------------------------------------------------------------|---------------|
-| FastQC                | Quality control of raw reads                                                           | Bash          |
-| Trimmomatic           | Read trimming and filtering                                                            | Bash          |
-| Kraken2               | Taxonomic classification using k‑mers                                                  | Bash          |
-| MetaPhlAn             | Marker‑based taxonomic profiling                                                       | Bash          |
-| MetaFX                | k‑mer‑based feature extraction, group‑specific k‑mers, classification (Random Forest)  | Bash / Python |
-| Mash                  | MinHash‑based genomic distance estimation (Jaccard index)                              | Bash          |
-| Python                | Data manipulation, stats, ML models                                                    | Python        |
-| - scikit‑learn        | Machine learning models                                                                | Python        |
-| - matplotlib / seaborn| Visualisation (PCA, t-SNE, alpha diversity, etc.)                                         | Python        |
+| [FastQC](https://github.com/s-andrews/fastqc)                | Quality control of raw reads                                                           | Bash          |
+| [Trimmomatic](https://github.com/usadellab/trimmomatic)           | Read trimming and filtering                                                            | Bash          |
+| [Kraken2](https://github.com/DerrickWood/kraken2)               | Taxonomic classification using k‑mers                                                  | Bash          |
+| [MetaPhlAn4](https://github.com/biobakery/MetaPhlAn)             | Marker‑based taxonomic profiling                                                       | Bash          |
+| [MetaFX](https://github.com/ctlab/metafx)                | k‑mer‑based feature extraction, group‑specific k‑mers, classification (Random Forest)  | Bash / Python |
+| [Mash](https://mash.readthedocs.io/en/latest/)                  | MinHash‑based genomic distance estimation (Jaccard index)                              | Bash          |
+| [Python](https://www.python.org/)               | Data manipulation, stats, ML models                                                    | Python        |
+| - [scikit‑learn](https://scikit-learn.org/stable/index.html)        | Machine learning models                                                                | Python        |
+| - [matplotlib](https://matplotlib.org/) / [seaborn](https://seaborn.pydata.org/)| Visualisation (PCA, t-SNE, alpha diversity, etc.)                                         | Python        |
 
 ---
 
@@ -62,7 +62,7 @@ Currently, the project focuses on the following datasets:
     - 20 cases (with fracture), 37 healthy (without fracture).  
     - 20 cases (with osteoporosis or osteopinia), 37 healthy (without osteoporosis or osteopinia)
     
-  *Data preprocessing and feature extraction steps are in the Jupyter notebook: Steps/Step0_data preproc.ipynb, available in this repository.*
+  *Data preprocessing and feature extraction steps are in the Jupyter notebook: [Steps/Step0_data preproc.ipynb](Step0_data_preproc.ipynb), available in this repository.*
 - **Result validation**  
     - To evaluate the predictive performance of the models, the labeled cohort (56 samples) was split into *training (44 samples)* and *test (12 samples)* sets.  
        - The test set contained 4 low-BMD samples and 8 normal-BMD samples.
@@ -79,13 +79,13 @@ Currently, the project focuses on the following datasets:
 
 1. **Quality control** – `FastQC`
 2. **Trimming** – `Trimmomatic`
-3. **Taxonomic profiling** – `Kraken2` (k‑mer based) and `MetaPhlAn` (marker genes) –> *Steps/Step1_annotation.ipunb*
+3. **Taxonomic profiling** – `Kraken2` (k‑mer based) and `MetaPhlAn4` (marker genes) –> *[Steps/Step1_annotation.ipunb](Step1_annotation.ipunb)*
 4. **Feature extraction**
-      - taxonomic abundances (`Kraken2`, `MetaPhlAn`) –> *Steps/Step1_annotation.ipunb/substeps 1.5 and 1.6*
-      - k‑mer features (`MetaFX`) *Steps/Step2_MetaFX_Mash.ipunb/substep 2.1*
-5. **Genomic distance estimation** – `Mash` (MinHash‑based Jaccard index) –> *Steps/Step2_MetaFX_Mash.ipunb/substep 2.2*
-6. **Statistical analysis & visualisation** – PCA, t-SNE, alpha diversity (Shannon index), beta diversity (`Mash` distances tab), mean relative abundance –> *Steps/Step1_annotation.ipunb/substeps from 1.7 and /Step2_MetaFX_Mash.ipunb/substeps from 2.2*
-7. **Machine learning** –> *Steps/Step3_validation.ipunb*
+      - taxonomic abundances (`Kraken2`, `MetaPhlAn4`) –> *[Steps/Step1_annotation.ipunb/substeps 1.5 and 1.6](Step1_annotation.ipunb)*
+      - k‑mer features (`MetaFX`) –> *[Steps/Step2_MetaFX_Mash.ipunb/substep 2.1](Step2_MetaFX_Mash.ipunb)*
+5. **Genomic distance estimation** – `Mash` (MinHash‑based Jaccard index) –> *[Steps/Step2_MetaFX_Mash.ipunb/substep 2.2](Step2_MetaFX_Mash.ipunb)*
+6. **Statistical analysis & visualisation** – PCA, t-SNE, alpha diversity (Shannon index), beta diversity (`Mash` distances tab), mean relative abundance –> *[Steps/Step1_annotation.ipunb/substeps from 1.7](Step1_annotation.ipunb) and [/Step2_MetaFX_Mash.ipunb/substeps from 2.2](Step2_MetaFX_Mash.ipunb)*
+7. **Machine learning** –> *[Steps/Step3_validation.ipunb](Step3_validation.ipunb)*
       - Random Forest (`scikit‑learn`) on taxonomic profiles
       - Random Forest (`MetaFX`) on k‑mer features
       - 5‑fold cross‑validation and train/test split
@@ -126,12 +126,12 @@ Thus, standard diversity metrics alone are insufficient to discriminate the grou
 
 **Table: Top discriminatory contigs between normal and low bone density groups identified by Random Forest (MetaFX results)**
 
-| Sequence ID | Predicted bacterium | Predicted gene/protein | Function / role | Reference (article) |
+| Sequence ID | Predicted bacterium | Predicted gene/protein | Function / role | Reference  |
 |-------------|---------------------|------------------------|----------------|---------------------|
 | `low_238` | *Ruthenibacterium lactatiformans* | Sulfatase-like hydrolase/transferase (WP_288694885.1) | Cleavage of sulfated compounds; potential pathogen associated with vertebral osteomyelitis and bacteremia (first human case reported in 2024) | [PMC11247725](https://pmc.ncbi.nlm.nih.gov/articles/PMC11247725/) |
-| `low_340` | *Caproiciproducens lactatisolvens* | Not specified (16S rRNA) | Caproic acid production; no established link to bone pathology (found in a patient with low bone density) | none |
+| `low_340` | *Caproiciproducens lactatisolvens* | Not specified (16S rRNA) | Caproic acid production; no established link to bone pathology (found in a patient with low bone density) | [PMC7873966](https://pubmed.ncbi.nlm.nih.gov/33584563/) |
 | `normal_602` | *Bacteroides finegoldii* | Transmembrane permease (DMT family); putative transmembrane permease (CDA85058.1) | Hyaluronic acid degradation to oligosaccharides, potentially beneficial for joint and skin health; normal commensal | [PMID 36586473](https://pubmed.ncbi.nlm.nih.gov/36586473/) |
-| `low_605` | *[Clostridium] leptum* (metagenome-assembled) | Histidine kinase sensor (MFQ9845483.1) | Two-component signal transduction system, adaptation to stress/nutrients; role in bone density unclear | none |
+| `low_605` | *[Clostridium] leptum* (metagenome-assembled) | Histidine kinase sensor (MFQ9845483.1) | Two-component signal transduction system, adaptation to stress/nutrients; May be related to osteoporosis, as these bacteria produce short-chain fatty acids (SCFAs) that are good for bones. | [Lyu et al., 2023](https://www.nature.com/articles/s41413-023-00264-x) |
 
 ---
 *For a complete list of top‑20 contigs, please refer to [top20_bmd.fasta](https://zenodo.org/records/20325514/files/top20_bmd.fasta?download=1) in the repository.*
@@ -207,7 +207,7 @@ This suggests that the low‑BMD patient group is microbially heterogeneous, whi
 
 The table below shows the top‑10 most important features (taxa) from the Random Forest classifier trained on Kraken2 species‑level relative abundances. 
 
-| Taxon | Importance |
+| Taxon | Importance (Gini) |
 |-------|------------|
 | *Clostridium saccharoperbutylacetonicum* | 0.013596 |
 | *Clostridium gelidum* | 0.011232 |
