@@ -168,7 +168,7 @@ The stacked bar chart revealed a broadly similar distribution of major taxa betw
 | `case_22` | *Phocaeicola vulgatus* (formerly *Bacteroides vulgatus*) | not specified | Candidate strain NB1000S for treatment of hyperoxaluria (oxalate reduction). May indirectly affect calcium metabolism, but no direct bone link proven. | [PRJNA1211572](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1211572) |
 | `case_16` | *Bacteroides ovatus* | not specified | Typical gut commensal involved in dietary fibre fermentation. Neutral microorganism, not associated with bone pathology. | [CP134818](https://www.ncbi.nlm.nih.gov/nucleotide/CP134818.1) |
 
-*Note*: In the case (fracture) group, no bacterium with a proven direct link to osteomyelitis or bone resorption was found, in contrast to the low bone density group where Ruthenibacterium lactatiformans was present. The dominant bacteria are common commensals of the genus Bacteroides.
+*Note*: In the case (fracture) group, no bacterium with a proven direct link to osteomyelitis or bone resorption was found, in contrast to the low bone density group where *Ruthenibacterium lactatiformans* was present. The dominant bacteria are common commensals of the genus Bacteroides.
 
 ---
 *For a complete list of top‑20 contigs, please refer to [top20_fracture.fasta](https://zenodo.org/records/20325514/files/top20_fracture.fasta?download=1) in the repository.*
@@ -226,7 +226,7 @@ Using the Random Forest model from **MetaFX with preprocessing**, the most impor
 
 ### Biological interpretation
 
-The presence of *Dorea longicatena* (contig `low_87`) is particularly interesting because this species shows a **paradoxical role**: it has been positively associated with bone mineral density and muscle mass, but also linked to obesity and colorectal cancer.  
+The presence of *Dorea longicatena* (contig `low_87`) is particularly interesting because this species shows a paradoxical role: it has been positively associated with bone mineral density and muscle mass, but also linked to obesity and colorectal cancer.  
 This suggests that the low‑BMD patient group is microbially heterogeneous, which could explain why some low‑BMD samples were misclassified by both methods.
 
 ---
