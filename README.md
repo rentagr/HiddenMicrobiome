@@ -10,6 +10,18 @@
 
 ---
 
+# Repository structure
+
+- **`Steps/`** – Jupyter notebooks detailing the entire analysis pipeline:
+  - `Step0_preproc.ipynb` – data quality control, filtering, and merging of metadata.
+  - `Step1_annotation.ipynb` – taxonomic profiling with Kraken2 and MetaPhlAn, calculation of alpha/beta diversity, PCA/t‑SNE.
+  - `Step2_MetaFX_Mash.ipynb` – extraction of k‑mer‑based features (MetaFX) and genome‑scale distance estimation (Mash).
+  - `Step3_validation.ipynb` – splitting into train/test, training Random Forest models, external validation on arthritis data, extraction of top‑20 contigs.
+- **`images/`** – all figures generated during the analysis, organised by subfolder (`BMD/`, `Fracture/`, `Step1_kraken/`, `Step1_metaphlan/`).
+- **`About_dataset.md`** – detailed description of the public datasets used.
+- **`README.md`** – project overview, objectives, results.
+---
+
 #  About the Project
 
 The human gut microbiome harbors a vast diversity of microorganisms, many of which are difficult to detect with conventional methods. This project aims to uncover **hidden microbial signatures** associated with various diseases (e.g. osteoporosis) using whole-genome shotgun sequencing data. 
@@ -72,7 +84,9 @@ Currently, the project focuses on the following datasets:
     - Two approaches were compared:
         1. **Kraken2** – taxonomic profiling, filtering of taxa present in <5% of samples.
         2. **MetaFX with preprocessing** – filtering of k‑mers present in <5% of training samples.
----
+
+   - **External validation on an independent arthritis cohort**  
+     To test the k‑mer‑based markers generalise to a different bone‑related pathology, we applied the same feature extraction pipeline to FASTQ files from a [colleague's arthritis study](https://github.com/dar1a-da/HiddenMicrobiota/tree/dev). The Random Forest model trained on the osteoporosis training set was then used to predict disease status. 
 
 
 # Pipeline Overview
@@ -99,6 +113,7 @@ Currently, the project focuses on the following datasets:
 - **Python 3.8+** with packages: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, etc.
 - **Bash** environment (Linux / macOS / WSL)
 - External tools: `FastQC`, `Trimmomatic`, `Kraken2`, `MetaPhlAn`, `MetaFX`, `Mash` (see their respective installation guides)
+---
 
 # Results
 
@@ -106,7 +121,11 @@ Currently, the project focuses on the following datasets:
 
 To assess whether global microbial community structure differs between disease groups, we calculated **alpha diversity** (Shannon index) and **beta diversity** (Mash distances, Jaccard index) using both Kraken2 and MetaPhlAn taxonomic profiles.
 
-- **Alpha diversity:** No statistically significant differences were observed between healthy and diseased individuals (neither for BMD or for fracture groups), regardless of the annotation method. A weak trend towards lower diversity in cases was noted, which qualitatively agrees with the concept of dysbiosis, but the differences did not reach significance.
+- **Alpha diversity (Shannon index):** did not reveal any statistically significant differences between healthy and diseased individuals (neither for BMD nor for fracture groups), regardless of the annotation method (Kraken2 or MetaPhlAn). 
+
+    However, the observed trends were method‑dependent: while Kraken2 showed a non‑significant tendency towards lower diversity in cases (qualitatively consistent with the concept of dysbiosis), MetaPhlAn exhibited a slight, non‑significant increase in diversity in the low‑BMD group. 
+    
+    This methodological discrepancy likely reflects the intrinsic differences between the two tools – Kraken2 is a k‑mer‑based classifier sensitive to rare and non‑bacterial sequences, whereas MetaPhlAn relies on strict marker genes and therefore captures only well‑annotated bacterial diversity.
 
 ![Alpha diversity BMD](./images/BMD/BMD_alpha_diversity.png)
 
@@ -165,9 +184,7 @@ Thus, standard diversity metrics alone are insufficient to discriminate the grou
 
 ### External validation on an independent arthritis cohort
 
-To test whether the k‑mer‑based markers discovered in the osteopinia cohort generalise to a different bone‑related pathology, we applied the same feature extraction pipeline (using the feature directory wd_unique_bmd) to raw FASTQ files from [a colleague studying arthritis](https://github.com/dar1a-da/HiddenMicrobiota/tree/dev). The Random Forest model trained on the osteopinia training set was then used to predict disease status for the arthritis samples.
-
-The model correctly classified **80%** of the arthritis samples (as healthy), indicating a good ability to discriminate health vs disease across different skeletal disorders. 
+The Random Forest model trained on the osteopinia training set correctly classified **80%** of the arthritis samples (as healthy), indicating a good ability to discriminate health vs disease across different skeletal disorders. 
 
 This result supports the potential of the identified k‑mer signatures as general markers of bone/joint pathology, although further validation on larger and more homogeneous cohorts is needed.
 
