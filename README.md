@@ -14,11 +14,11 @@
 
 - **`Steps/`** – Jupyter notebooks detailing the entire analysis pipeline:
   - `Step0_preproc.ipynb` – data quality control, filtering, and merging of metadata.
-  - `Step1_annotation.ipynb` – taxonomic profiling with Kraken2 and MetaPhlAn, calculation of alpha/beta diversity, PCA/t‑SNE.
+  - `Step1_annotation.ipynb` – taxonomic profiling with Kraken2 and MetaPhlAn, calculation of alpha diversity, PCA, t‑SNE.
   - `Step2_MetaFX_Mash.ipynb` – extraction of k‑mer‑based features (MetaFX) and genome‑scale distance estimation (Mash).
   - `Step3_validation.ipynb` – splitting into train/test, training Random Forest models, external validation on arthritis data, extraction of top‑20 contigs.
-- **`images/`** – all figures generated during the analysis, organised by subfolder (`BMD/`, `Fracture/`, `Step1_kraken/`, `Step1_metaphlan/`).
-- **`About_dataset.md`** – detailed description of the public datasets used.
+- **`images/`** – figures generated during the analysis, organised by subfolder (`BMD/`, `Fracture/`, `Step1_kraken/`, `Step1_metaphlan/`).
+- **`About_dataset.md`** – detailed description of the public dataset used.
 - **`README.md`** – project overview, objectives, results.
 ---
 
