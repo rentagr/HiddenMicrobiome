@@ -34,8 +34,8 @@ for sample in samples:
     lengths = []
 
     def read_fastqc_data(zip_path):
-        with zipfile.ZipFile(zip_path, 'r') as z:
-            base = os.path.basename(zip_path).replace('.zip', '')
+        with zipfile.ZipFile(zip_path, "r") as z:
+            base = os.path.basename(zip_path).replace(".zip", "")
             data_file = f"{base}/fastqc_data.txt"
             with z.open(data_file) as f:
                 return io.TextIOWrapper(f).readlines()
@@ -54,12 +54,14 @@ for sample in samples:
         if "Sequence length" in line:
             lengths.append(line.split()[-1].strip())
 
-    results.append({
-        "sample": sample,
-        "total_reads": reads,
-        "read1_length": lengths[0] if len(lengths) > 0 else "NA",
-        "read2_length": lengths[1] if len(lengths) > 1 else "NA"
-    })
+    results.append(
+        {
+            "sample": sample,
+            "total_reads": reads,
+            "read1_length": lengths[0] if len(lengths) > 0 else "NA",
+            "read2_length": lengths[1] if len(lengths) > 1 else "NA",
+        }
+    )
 
     print(sample, reads, lengths)
 
