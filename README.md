@@ -48,22 +48,6 @@ The pipeline is implemented primarily in **Bash** and **Python** (for data proce
 
 ---
 
-# Tools And Technologies
-
-| Tool / Library        | Purpose                                                                                | Language      |
-|-----------------------|----------------------------------------------------------------------------------------|---------------|
-| [FastQC](https://github.com/s-andrews/fastqc)                | Quality control of raw reads                                                           | Bash          |
-| [Trimmomatic](https://github.com/usadellab/trimmomatic)           | Read trimming and filtering                                                            | Bash          |
-| [Kraken2](https://github.com/DerrickWood/kraken2)               | Taxonomic classification using k‑mers                                                  | Bash          |
-| [MetaPhlAn4](https://github.com/biobakery/MetaPhlAn)             | Marker‑based taxonomic profiling                                                       | Bash          |
-| [MetaFX](https://github.com/ctlab/metafx)                | k‑mer‑based feature extraction, group‑specific k‑mers, classification (Random Forest)  | Bash / Python |
-| [Mash](https://mash.readthedocs.io/en/latest/)                  | MinHash‑based genomic distance estimation (Jaccard index)                              | Bash          |
-| [Python](https://www.python.org/)               | Data manipulation, stats, ML models                                                    | Python        |
-| - [scikit‑learn](https://scikit-learn.org/stable/index.html)        | Machine learning models                                                                | Python        |
-| - [matplotlib](https://matplotlib.org/) / [seaborn](https://seaborn.pydata.org/)| Visualisation (PCA, t-SNE, alpha diversity, etc.)                                         | Python        |
-
----
-
 # Datasets
 
 Currently, the project focuses on the following datasets:
@@ -87,7 +71,13 @@ Currently, the project focuses on the following datasets:
 
    - **External validation on an independent arthritis cohort**  
      To test the k‑mer‑based markers generalise to a different bone‑related pathology, we applied the same feature extraction pipeline to FASTQ files from a [colleague's arthritis study](https://github.com/dar1a-da/HiddenMicrobiota/tree/dev). The Random Forest model trained on the osteoporosis training set was then used to predict disease status. 
+-----
+# Prerequisites
 
+- **Python 3.8+** with packages: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, etc.
+- **Bash** environment (Linux / macOS / WSL)
+- External tools: [FastQC](https://github.com/s-andrews/fastqc), [Trimmomatic](https://github.com/usadellab/trimmomatic), [Kraken2](https://github.com/DerrickWood/kraken2)  , [MetaPhlAn4](https://github.com/biobakery/MetaPhlAn) , [MetaFX](https://github.com/ctlab/metafx) , [Mash](https://mash.readthedocs.io/en/latest/)  (see their respective installation guides)
+---
 
 # Pipeline Overview
 
@@ -106,13 +96,6 @@ Currently, the project focuses on the following datasets:
 
 8. **Marker interpretation** – annotation of top‑ranked features using NCBI (blastn, blastx) and leterature
 
----
-
-# Prerequisites
-
-- **Python 3.8+** with packages: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, etc.
-- **Bash** environment (Linux / macOS / WSL)
-- External tools: `FastQC`, `Trimmomatic`, `Kraken2`, `MetaPhlAn`, `MetaFX`, `Mash` (see their respective installation guides)
 ---
 
 # Results
@@ -141,9 +124,15 @@ Thus, standard diversity metrics alone are insufficient to discriminate the grou
 
 ## BMD
 **Mean relative abundance Kraken2 annotation results**
+
+The stacked bar chart of the top‑20 most abundant taxa (plus "Others") revealed a broadly similar distribution between the low and normal BMD groups. No dramatic differences in the relative contribution of the major taxa were observed; both groups shared a comparable set of dominant species, with only minor variations in their mean abundances. This suggests that at the level of overall taxonomic composition, the two BMD groups are qualitatively similar, and any potential microbiome differences may reside in rarer or unannotated taxa rather than in the most abundant species.
+
 ![Mean relative abundance](./images/BMD/BMD_MRA.png)
 
 **Table: Top discriminatory contigs between normal and low bone density groups identified by Random Forest (MetaFX results)**
+
+ - The k‑mers that were most important for the Random Forest model (trained on MetaFX features) were assembled into contigs. Each contig was then aligned against the NCBI nucleotide (nt) and protein (nr) databases using blastn and blastx. The best hits are reported in the tables below. This procedure identifies not only taxonomic labels but also putative functions encoded on the discriminatory sequences.
+
 
 | Sequence ID | Predicted bacterium | Predicted gene/protein | Function / role | Reference  |
 |-------------|---------------------|------------------------|----------------|---------------------|
@@ -155,11 +144,20 @@ Thus, standard diversity metrics alone are insufficient to discriminate the grou
 ---
 *For a complete list of top‑20 contigs, please refer to [top20_bmd.fasta](https://zenodo.org/records/20325514/files/top20_bmd.fasta?download=1) in the repository.*
 
+
+
+
 ## Fracture
 **Mean relative abundance on Kraken2 annotation results**
+
+The stacked bar chart revealed a broadly similar distribution of major taxa between individuals with and without fractures, with both groups sharing a comparable set of dominant species.Individuals with fractures have a few dominant species account for a larger proportion of the microbial community, whereas in those without fractures, the abundance is more evenly distributed among a greater number of taxa, resulting in a larger "Others" segment. These differences, while not dramatic, may point to a less diverse or more uneven community structure associated with fracture status.
+
 ![Mean relative abundance](./images/Fracture/Fracture_MRA.png)
 
 **Table: Top discriminatory contigs between normal and low bone density groups identified by Random Forest (MetaFX results)**
+
+- The k‑mers that were most important for the Random Forest model (trained on MetaFX features) were assembled into contigs. Each contig was then aligned against the NCBI nucleotide (nt) and protein (nr) databases using blastn and blastx. The best hits are reported in the tables below. This procedure identifies not only taxonomic labels but also putative functions encoded on the discriminatory sequences.
+
 
 | Sequence ID | Predicted bacterium | Predicted gene/protein | Function / role | Reference |
 |-------------|---------------------|------------------------|----------------|-----------|
@@ -175,12 +173,26 @@ Thus, standard diversity metrics alone are insufficient to discriminate the grou
 ---
 *For a complete list of top‑20 contigs, please refer to [top20_fracture.fasta](https://zenodo.org/records/20325514/files/top20_fracture.fasta?download=1) in the repository.*
 
+### Why the tables differ between BMD and Fracture analyses?
+
+The sets of discriminatory contigs differ because the models were trained on different response variables:
+
+**BMD analysis** – low vs normal bone mineral density.
+
+**Fracture analysis** – case (fracture) vs healthy (no fracture).
+
+The groups did not match between the analyses: low BMD was not always associated with fractures, and the datasets were partly distinct. In subsequent work, we focused on the BMD analysis, considering this trait more relevant for studying osteopenia and osteoporosis. Although the underlying microbial communities overlap, the most informative k‑mers vary with the clinical definition of the outcome. Therefore, the two tables highlight different microbial signatures.
+
+-----
+
 ## Validation results 
+
+Using MetaFX on all 56 samples, we extracted 9035 k‑mer‑based features. A Random Forest classifier was then trained to discriminate between normal and low‑BMD samples using 5‑fold cross‑validation. The model achieved a mean accuracy of 89.4% (±0.038). To obtain a more realistic estimate of generalisation performance, we additionally performed a train/test split (44/12) and evaluated the model on the unseen test set.
 
 | Method | Accuracy | Recall (low) | Precision (low) | Correct low (out of 4) | Correct normal (out of 8) |
 |--------|----------|--------------|----------------|------------------------|---------------------------|
 | Kraken2 | **0.833** (10/12) | 0.50 | 1.00 | 2 | 8 |
-| MetaFX + preprocessing | 0.750 (9/12) | 0.25 | 1.00 | 1 | 8 |
+| MetaFX  | 0.750 (9/12) | 0.25 | 1.00 | 1 | 8 |
 
 ### External validation on an independent arthritis cohort
 
@@ -200,7 +212,7 @@ Thus, the performance of **Kraken2** and **MetaFX with preprocessing** is **comp
 
 The consistently misclassified low‑BMD samples (`SRR25006884` and `SRR25006909`) might have bone density reduction driven by non‑microbiome factors (e.g., genetic connective tissue disorders), which warrants further clinical investigation.
 
-## MetaFX Top‑20 contigs discriminating low/normal groups (trained on the training set)
+### MetaFX Top‑20 contigs discriminating low/normal groups (trained on the training set)
 
 Using the Random Forest model from **MetaFX with preprocessing**, the most important features (k‑mers assembled into contigs) were extracted and annotated via BLAST. Selected results are shown below; the full list of 20 contigs is available in Supplementary Materials.
 
@@ -220,7 +232,7 @@ This suggests that the low‑BMD patient group is microbially heterogeneous, whi
 ---
 *For a complete list of top‑20 contigs, please refer to [top20_contigs_metafx_preproc.fasta](https://zenodo.org/records/20325514/files/top20_contigs_metafx_preproc.fasta?download=1) in the repository.*
 
-## Kraken2 Top‑10 taxa discriminating low/normal groups (trained on the training set)
+### Kraken2 Top‑10 taxa discriminating low/normal groups (trained on the training set)
 
 The table below shows the top‑10 most important features (taxa) from the Random Forest classifier trained on Kraken2 species‑level relative abundances. 
 
