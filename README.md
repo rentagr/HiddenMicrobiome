@@ -12,7 +12,7 @@
 
 # Repository structure
 
-- **`pipeline/`** – All executable scripts (Bash and Python), organised by step:
+- **`pipeline/`** – All executable scripts (Bash and Python), organised by steps:
   - 00_preprocessing/ – download, QC, trimming, BMD calculation.
   - 01_taxonomic_annotation/ – Kraken2, MetaPhlAn, PCA, t‑SNE, alpha diversity.
   - 02_kmer_mash/ – MetaFX (k‑mer features), Mash distances, dendrogram.
@@ -26,7 +26,8 @@
 - **`About_dataset.md`** – Detailed description of the public dataset.
 - **`requirements.txt`** – Python dependencies for local analysis.
 - **`README.md`** – Project overview, objectives, results.
-- **`Steps_backup/`** – archived notebooks, kept for reference; not required for running the pipeline.
+- **`Steps_backup/`** – Archived notebooks, kept for reference; not required for running the pipeline.
+
 ---
 
 #  About the Project
@@ -79,15 +80,16 @@ Currently, the project focuses on the following datasets:
 
    - **External validation on an independent arthritis cohort**  
      To test the k‑mer‑based markers generalise to a different bone‑related pathology, we applied the same feature extraction pipeline to FASTQ files from a [colleague's arthritis study](https://github.com/dar1a-da/HiddenMicrobiota/tree/dev). The Random Forest model trained on the osteoporosis training set was then used to predict disease status. 
------
+
+---
+
 # Prerequisites
 
 - **Python 3.8+** with packages: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, etc (see [requirements.txt](requirements.txt))/
 - **Bash** environment (Linux / macOS / WSL)
 - External tools: [FastQC](https://github.com/s-andrews/fastqc), [Trimmomatic](https://github.com/usadellab/trimmomatic), [Kraken2](https://github.com/DerrickWood/kraken2)  , [MetaPhlAn4](https://github.com/biobakery/MetaPhlAn) , [MetaFX](https://github.com/ctlab/metafx) , [Mash](https://mash.readthedocs.io/en/latest/)  (see their respective installation guides)
----
 
-# Pipeline Overview
+---
 
 # Pipeline Overview
 
@@ -150,10 +152,8 @@ The stacked bar chart of the top‑20 most abundant taxa (plus "Others") reveale
 | `low_605` | *[Clostridium] leptum* (metagenome-assembled) | Histidine kinase sensor (MFQ9845483.1) | Two-component signal transduction system, adaptation to stress/nutrients; May be related to osteoporosis, as these bacteria produce short-chain fatty acids (SCFAs) that are good for bones. | [Lyu et al., 2023](https://www.nature.com/articles/s41413-023-00264-x) |
 
 ---
+
 *For a complete list of top‑20 contigs, please refer to [top20_bmd.fasta](https://zenodo.org/records/20325514/files/top20_bmd.fasta?download=1) in the repository.*
-
-
-
 
 ## Fracture
 **Mean relative abundance on Kraken2 annotation results**
@@ -165,7 +165,6 @@ The stacked bar chart revealed a broadly similar distribution of major taxa betw
 **Table: Top discriminatory contigs between normal and low bone density groups identified by Random Forest (MetaFX results)**
 
 - The k‑mers that were most important for the Random Forest model (trained on MetaFX features) were assembled into contigs. Each contig was then aligned against the NCBI nucleotide (nt) and protein (nr) databases using blastn and blastx. The best hits are reported in the tables below. This procedure identifies not only taxonomic labels but also putative functions encoded on the discriminatory sequences.
-
 
 | Sequence ID | Predicted bacterium | Predicted gene/protein | Function / role | Reference |
 |-------------|---------------------|------------------------|----------------|-----------|
@@ -201,7 +200,7 @@ The sets of discriminatory contigs differ because the models were trained on dif
 
 The groups did not match between the analyses: low BMD was not always associated with fractures, and the datasets were partly distinct. In subsequent work, we focused on the BMD analysis, considering this trait more relevant for studying osteopenia and osteoporosis. Although the underlying microbial communities overlap, the most informative k‑mers vary with the clinical definition of the outcome. Therefore, the two tables highlight different microbial signatures.
 
------
+---
 
 ## Validation results 
 
@@ -214,7 +213,7 @@ Using MetaFX on all 56 samples, we extracted 9035 k‑mer‑based features. A Ra
 
 ### External validation on an independent arthritis cohort
 
-The Random Forest model trained on the osteopinia training set correctly classified **80%** of the arthritis samples (as healthy), indicating a good ability to discriminate health vs disease across different skeletal disorders. 
+The Random Forest model trained on the osteopinia training set correctly classified 80% of the arthritis samples (as healthy), indicating a good ability to discriminate health vs disease across different skeletal disorders. 
 
 This result supports the potential of the identified k‑mer signatures as general markers of bone/joint pathology, although further validation on larger and more homogeneous cohorts is needed.
 
@@ -248,6 +247,7 @@ The presence of *Dorea longicatena* (contig `low_87`) is particularly interestin
 This suggests that the low‑BMD patient group is microbially heterogeneous, which could explain why some low‑BMD samples were misclassified by both methods.
 
 ---
+
 *For a complete list of top‑20 contigs, please refer to [top20_contigs_metafx_preproc.fasta](https://zenodo.org/records/20325514/files/top20_contigs_metafx_preproc.fasta?download=1) in the repository.*
 
 ### Kraken2 Top‑10 taxa discriminating low/normal groups (trained on the training set)
