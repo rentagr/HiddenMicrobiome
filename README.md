@@ -12,14 +12,21 @@
 
 # Repository structure
 
-- **`Steps/`** – Jupyter notebooks detailing the entire analysis pipeline:
-  - `Step0_preproc.ipynb` – data quality control, filtering, and merging of metadata.
-  - `Step1_annotation.ipynb` – taxonomic profiling with Kraken2 and MetaPhlAn, calculation of alpha diversity, PCA, t‑SNE.
-  - `Step2_MetaFX_Mash.ipynb` – extraction of k‑mer‑based features (MetaFX) and genome‑scale distance estimation (Mash).
-  - `Step3_validation.ipynb` – splitting into train/test, training Random Forest models, external validation on arthritis data, extraction of top‑20 contigs.
-- **`images/`** – figures generated during the analysis, organised by subfolder (`BMD/`, `Fracture/`, `Step1_kraken/`, `Step1_metaphlan/`).
-- **`About_dataset.md`** – detailed description of the public dataset used.
-- **`README.md`** – project overview, objectives, results.
+- **`pipeline/`** – All executable scripts (Bash and Python), organised by step:
+  - 00_preprocessing/ – download, QC, trimming, BMD calculation.
+  - 01_taxonomic_annotation/ – Kraken2, MetaPhlAn, PCA, t‑SNE, alpha diversity.
+  - 02_kmer_mash/ – MetaFX (k‑mer features), Mash distances, dendrogram.
+  - 03_validation/ – train/test split, Random Forest, external validation.
+- **`notebooks/`** – Jupyter notebooks with step‑by‑step instructions and figure previews:
+  - 00_preprocessing.ipynb
+  - 01_taxonomic_annotation.ipynb
+  - 02_metafx_mash.ipynb
+  - 03_validation.ipynb
+- **`images/`** – All figures generated during the analysis (PNG files).
+- **`About_dataset.md`** – Detailed description of the public dataset.
+- **`requirements.txt`** – Python dependencies for local analysis.
+- **`README.md`** – Project overview, objectives, results.
+- **`Steps_backup/`** – archived notebooks, kept for reference; not required for running the pipeline.
 ---
 
 #  About the Project
@@ -58,7 +65,8 @@ Currently, the project focuses on the following datasets:
     - 20 cases (with fracture), 37 healthy (without fracture).  
     - 20 cases (with osteoporosis or osteopinia), 37 healthy (without osteoporosis or osteopinia)
     
-  *Data preprocessing and feature extraction steps are in the Jupyter notebook: [Steps/Step0_preproc.ipynb](/Steps/Step0_preproc.ipynb), available in this repository.*
+   Data preprocessing and feature extraction steps are described in the notebooks: [notebooks/00_preprocessing.ipynb](notebooks/00_preprocessing.ipynb) and [notebooks/01_taxonomic_annotation.ipynb](notebooks/01_taxonomic_annotation.ipynb).
+
 - **Result validation**  
     - To evaluate the predictive performance of the models, the labeled cohort (56 samples) was split into *training (44 samples)* and *test (12 samples)* sets.  
        - The test set contained 4 low-BMD samples and 8 normal-BMD samples.
@@ -74,27 +82,27 @@ Currently, the project focuses on the following datasets:
 -----
 # Prerequisites
 
-- **Python 3.8+** with packages: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, etc.
+- **Python 3.8+** with packages: `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`, etc (see [requirements.txt](requirements.txt))/
 - **Bash** environment (Linux / macOS / WSL)
 - External tools: [FastQC](https://github.com/s-andrews/fastqc), [Trimmomatic](https://github.com/usadellab/trimmomatic), [Kraken2](https://github.com/DerrickWood/kraken2)  , [MetaPhlAn4](https://github.com/biobakery/MetaPhlAn) , [MetaFX](https://github.com/ctlab/metafx) , [Mash](https://mash.readthedocs.io/en/latest/)  (see their respective installation guides)
 ---
 
 # Pipeline Overview
 
-1. **Quality control** – `FastQC`
-2. **Trimming** – `Trimmomatic`
-3. **Taxonomic profiling** – `Kraken2` (k‑mer based) and `MetaPhlAn4` (marker genes) –> *[Steps/Step1_annotation.ipynb](/Steps/Step1_annotation.ipynb)*
-4. **Feature extraction**
-      - taxonomic abundances (`Kraken2`, `MetaPhlAn4`) –> *[Steps/Step1_annotation.ipynb/substeps 1.5 and 1.6](/Steps/Step1_annotation.ipynb)*
-      - k‑mer features (`MetaFX`) –> *[Steps/Step2_MetaFX_Mash.ipynb/substep 2.1](/Steps/Step2_MetaFX_Mash.ipynb)*
-5. **Genomic distance estimation** – `Mash` (MinHash‑based Jaccard index) –> *[Steps/Step2_MetaFX_Mash.ipynb/substep 2.2](/Steps/Step2_MetaFX_Mash.ipynb)*
-6. **Statistical analysis & visualisation** – PCA, t-SNE, alpha diversity (Shannon index), beta diversity (`Mash` distances tab), mean relative abundance –> *[Steps/Step1_annotation.ipynb/substeps from 1.7](/Steps/Step1_annotation.ipynb) and [/Step2_MetaFX_Mash.ipynb/substeps from 2.2](/Steps/Step2_MetaFX_Mash.ipynb)*
-7. **Machine learning** –> *[Steps/Step3_validation.ipynb](/Steps/Step3_validation.ipynb)*
-      - Random Forest (`scikit‑learn`) on taxonomic profiles
-      - Random Forest (`MetaFX`) on k‑mer features
-      - 5‑fold cross‑validation and train/test split
+# Pipeline Overview
 
-8. **Marker interpretation** – annotation of top‑ranked features using NCBI (blastn, blastx) and leterature
+1. **Quality control** – `FastQC` (scripts in [pipeline/00_preprocessing/](/pipeline/00_preprocessing/))
+2. **Trimming** – `Trimmomatic` (same folder)
+3. **Taxonomic profiling** – `Kraken2` and `MetaPhlAn4` (scripts in [pipeline/01_taxonomic_annotation/](/pipeline/01_taxonomic_annotation/))
+4. **Feature extraction**
+   - taxonomic abundances (`Kraken2`, `MetaPhlAn4`) → [01_taxonomic_annotation/analysis_local.py](/pipeline/01_taxonomic_annotation/analysis_local.py)
+   - k‑mer features (`MetaFX`) → [pipeline/02_metafx_mash/](/pipeline/02_metafx_mash/)
+5. **Genomic distance estimation** – `Mash` → [pipeline/02_metafx_mash/run_mash.sbatch](/pipeline/02_metafx_mash/run_mash.sbatch)
+6. **Statistical analysis & visualisation** – PCA, t‑SNE, alpha diversity, beta diversity, mean relative abundance → generated by [analysis_local.py](/pipeline/01_taxonomic_annotation/analysis_local.py) and [plot_dendrogram.py](/pipeline/02_metafx_mash/plot_dendrogram.py)
+7. **Machine learning** – Random Forest (`scikit‑learn` and `MetaFX`) → [pipeline/03_validation/](/pipeline/03_validation/)
+8. **Marker interpretation** – BLAST annotation of top‑ranked contigs (results in README and Zenodo)
+
+For detailed instructions, open the corresponding Jupyter notebook in the [notebooks/](/notebooks/) folder.
 
 ---
 
@@ -110,13 +118,13 @@ To assess whether global microbial community structure differs between disease g
     
     This methodological discrepancy likely reflects the intrinsic differences between the two tools – Kraken2 is a k‑mer‑based classifier sensitive to rare and non‑bacterial sequences, whereas MetaPhlAn relies on strict marker genes and therefore captures only well‑annotated bacterial diversity.
 
-![Alpha diversity BMD](./images/BMD/BMD_alpha_diversity.png)
+![Alpha diversity BMD](./images/BMD_alpha_diversity.png)
 
-![Alpha diversity Fracture](./images/Fracture/Fracture_alfa_diversity.png)
+![Alpha diversity Fracture](./images/Fracture_alfa_diversity.png)
 
 - **Beta diversity (Mash):** Principal coordinate analysis of Mash distances did not reveal any clear clustering by bone density or fracture status. This is consistent with the observation that mean relative abundances of individual taxa showed largely indistinguishable profiles between health and disease. The lack of clustering likely reflects the high heterogeneity of gut microbiota among patients with low BMD or fractures.
 
-![Beta diversity (Mash)](./images/BMD/dendrogram_combined.png)
+![Beta diversity (Mash)](./images/dendrogram_combined.png)
 
 Thus, standard diversity metrics alone are insufficient to discriminate the groups, motivating the use of machine learning approaches on k‑mer‑derived features.
 
@@ -127,7 +135,7 @@ Thus, standard diversity metrics alone are insufficient to discriminate the grou
 
 The stacked bar chart of the top‑20 most abundant taxa (plus "Others") revealed a broadly similar distribution between the low and normal BMD groups. No dramatic differences in the relative contribution of the major taxa were observed; both groups shared a comparable set of dominant species, with only minor variations in their mean abundances. This suggests that at the level of overall taxonomic composition, the two BMD groups are qualitatively similar, and any potential microbiome differences may reside in rarer or unannotated taxa rather than in the most abundant species.
 
-![Mean relative abundance](./images/BMD/BMD_MRA.png)
+![Mean relative abundance](./images/BMD_MRA.png)
 
 **Table: Top discriminatory contigs between normal and low bone density groups identified by Random Forest (MetaFX results)**
 
@@ -152,7 +160,7 @@ The stacked bar chart of the top‑20 most abundant taxa (plus "Others") reveale
 
 The stacked bar chart revealed a broadly similar distribution of major taxa between individuals with and without fractures, with both groups sharing a comparable set of dominant species.Individuals with fractures have a few dominant species account for a larger proportion of the microbial community, whereas in those without fractures, the abundance is more evenly distributed among a greater number of taxa, resulting in a larger "Others" segment. These differences, while not dramatic, may point to a less diverse or more uneven community structure associated with fracture status.
 
-![Mean relative abundance](./images/Fracture/Fracture_MRA.png)
+![Mean relative abundance](./images/Fracture_MRA.png)
 
 **Table: Top discriminatory contigs between normal and low bone density groups identified by Random Forest (MetaFX results)**
 
@@ -168,12 +176,22 @@ The stacked bar chart revealed a broadly similar distribution of major taxa betw
 | `case_22` | *Phocaeicola vulgatus* (formerly *Bacteroides vulgatus*) | not specified | Candidate strain NB1000S for treatment of hyperoxaluria (oxalate reduction). May indirectly affect calcium metabolism, but no direct bone link proven. | [PRJNA1211572](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1211572) |
 | `case_16` | *Bacteroides ovatus* | not specified | Typical gut commensal involved in dietary fibre fermentation. Neutral microorganism, not associated with bone pathology. | [CP134818](https://www.ncbi.nlm.nih.gov/nucleotide/CP134818.1) |
 
-*Note*: In the case (fracture) group, no bacterium with a proven direct link to osteomyelitis or bone resorption was found, in contrast to the low bone density group where *Ruthenibacterium lactatiformans* was present. The dominant bacteria are common commensals of the genus Bacteroides.
+### conclusion for the top‑contig tables
+
+Analysis of the most informative contigs identified by the Random Forest model (trained on MetaFX k‑mer features) revealed several microorganisms potentially associated with bone pathologies.
+
+In **the low‑BMD group**, the most notable finding was contig low_238, annotated as *Ruthenibacterium lactatiformans*. This bacterium was first described in 2024 in a patient with vertebral osteomyelitis, suggesting a possible role in bone tissue infection. Other contigs, such as low_605 (*Clostridium leptum*), are linked to short‑chain fatty acid production, which may influence bone metabolism. In contrast, contig normal_602 (*Bacteroides finegoldii*) was associated with the healthy group, consistent with its anti‑inflammatory properties.
+
+In **the fracture (case) group**, none of the identified contigs showed a direct association with osteomyelitis or bone resorption. The dominant bacteria belong to the genus Bacteroides (*B. luhongzhouii*, *B. zhangwenhongii*, *B. thetaiotaomicron*, *B. ovatus*, *Phocaeicola vulgatus*). These taxa are common gut commensals and are generally not considered pathogenic. The presence of *Mediterraneibacter massiliensis* and *Pedobacter sp.* requires further investigation, but their role in osteoporosis pathogenesis remains unclear.
+
+**Key difference between the two analyses:** the model trained on low bone mineral density (BMD) identified a specific pathogen (*R. lactatiformans*), whereas the fracture‑trained model did not find such markers. This may reflect different etiologies – low BMD may be driven partly by microbial factors, while fractures are likely determined by a complex mix of mechanical and non‑microbial causes.
+
+Thus, the identified contigs serve as candidate markers for further studies on the role of the gut microbiota in osteoporosis, but they require validation in larger, more homogeneous cohorts.
 
 ---
 *For a complete list of top‑20 contigs, please refer to [top20_fracture.fasta](https://zenodo.org/records/20325514/files/top20_fracture.fasta?download=1) in the repository.*
 
-### Why the tables differ between BMD and Fracture analyses?
+### why the tables differ between BMD and Fracture analyses?
 
 The sets of discriminatory contigs differ because the models were trained on different response variables:
 
