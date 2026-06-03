@@ -23,9 +23,11 @@
   - 02_metafx_mash.ipynb
   - 03_validation.ipynb
 - **`images/`** – All figures generated during the analysis (PNG files).
+- **`config.sh`** – Central configuration file (paths, environment, tool names). *Must be reviewed before running.*
 - **`About_dataset.md`** – Detailed description of the public dataset.
 - **`requirements.txt`** – Python dependencies for local analysis.
 - **`README.md`** – Project overview, objectives, results.
+- **`pipeline_backup/`** – Archived original scripts, kept for reference; not required for running the pipeline.
 - **`Steps_backup/`** – Archived notebooks, kept for reference; not required for running the pipeline.
 
 ---
@@ -90,6 +92,31 @@ Currently, the project focuses on the following datasets:
 - External tools: [FastQC](https://github.com/s-andrews/fastqc), [Trimmomatic](https://github.com/usadellab/trimmomatic), [Kraken2](https://github.com/DerrickWood/kraken2)  , [MetaPhlAn4](https://github.com/biobakery/MetaPhlAn) , [MetaFX](https://github.com/ctlab/metafx) , [Mash](https://mash.readthedocs.io/en/latest/)  (see their respective installation guides)
 
 ---
+
+# Configuration
+
+All pipeline scripts use a central configuration file `config.sh` located in the repository root. Before running any job, review and optionally edit `config.sh` to set:
+
+- `DATA_ROOT` – root directory for input data (default: ./data inside the repo)
+
+- `SRR_FILES_DIR`, `KRAKEN2_DB`, `METAPHLAN_DB` – paths to FASTQ files and databases
+
+- `LOG_DIR` – where `SLURM`-  logs will be stored
+
+- `CONDA_ENV` – name of the conda environment with all tools (default: snakemake)
+
+If your data or databases are stored in non‑default locations, either:
+
+- edit `config.sh` directly, or
+
+- export the corresponding environment variables before submitting jobs, e.g.:
+
+```bash
+export DATA_ROOT=/absolute/path/to/your/data
+export KRAKEN2_DB=/kraken2/db
+sbatch pipeline/01_taxonomic_annotation/run_kraken_all.sbatch
+```
+The scripts will automatically use the values from `config.sh` unless overridden by environment variables.
 
 # Pipeline Overview
 

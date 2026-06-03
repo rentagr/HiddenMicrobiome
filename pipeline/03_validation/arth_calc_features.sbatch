@@ -4,15 +4,19 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=128G
 #SBATCH -t 24:00:00
-#SBATCH --error=/mnt/tank/scratch/rislamova/SRR_files/Logs/calc_features_%j.err
-#SBATCH --output=/mnt/tank/scratch/rislamova/SRR_files/Logs/calc_features_%j.out
+#SBATCH --error=${LOG_DIR:-.}/calc_features_arth_%j.err
+#SBATCH --output=${LOG_DIR:-.}/calc_features_arth_%j.out
 
-cd /mnt/tank/scratch/ris/SRR_files
-source /nfs/home/ris/miniforge3/etc/profile.d/mamba.sh
-mamba activate snakemake
+set -euo pipefail
 
-metafx calc_features \
-    -t 8 \
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "${REPO_ROOT}/config.sh"
+
+cd "$SRR_FILES_DIR"
+activate_env
+
+"$METAFX" calc_features \
+    -t $SLURM_CPUS_PER_TASK \
     -m 16G \
     -w wd_calc_features \
     -k 31 \

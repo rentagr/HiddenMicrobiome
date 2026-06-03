@@ -7,8 +7,12 @@
 #SBATCH --mem=64G
 #SBATCH -t 4:00:00
 
-cd /mnt/tank/scratch/ris/SRR_files || exit 1
-source /nfs/home/ris/miniforge3/etc/profile.d/mamba.sh
-mamba activate snakemake
+set -euo pipefail
 
-metafx cv -t 16 -w wd_cv -f wd_unique/feature_table.tsv -i wd_unique/samples_categories.tsv -n 5 --grid
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "${REPO_ROOT}/config.sh"
+
+cd "$SRR_FILES_DIR"
+activate_env
+
+"$METAFX" cv -t $SLURM_CPUS_PER_TASK  -w wd_cv -f wd_unique/feature_table.tsv -i wd_unique/samples_categories.tsv -n 5 --grid

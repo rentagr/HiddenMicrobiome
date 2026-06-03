@@ -5,22 +5,22 @@
 #SBATCH --mem=250G
 #SBATCH -t 48:00:00
 #SBATCH --partition=main
-#SBATCH --error=${LOG_DIR:-.}/kraken_all_%j.err
-#SBATCH --output=${LOG_DIR:-.}/kraken_all_%j.out
+#SBATCH --error=/mnt/tank/scratch/ris/SRR_files/Logs/kraken_all_%j.err
+#SBATCH --output=/mnt/tank/scratch/ris/SRR_files/Logs/kraken_all_%j.out
 
-set -euo pipefail
+source /nfs/home/ris/miniforge3/etc/profile.d/mamba.sh
+mamba activate snakemake
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-source "${REPO_ROOT}/config.sh"
+cd /mnt/tank/scratch/ris/SRR_files || exit 1
 
-cd "$SRR_FILES_DIR"
-activate_env
+KRAKEN_DB="/mnt/tank/scratch/ris/databases/kraken2"
 
 # Getting a list of all the samples
 samples=($(ls *_1_trimmed_paired.fastq.gz | sed 's/_1_trimmed_paired.fastq.gz//'))
 
 total=${#samples[@]}
 echo "Samples found: $total"
+echo "General task start: $(date)"
 
 for i in "${!samples[@]}"; do
     sample=${samples[$i]}
@@ -32,13 +32,14 @@ for i in "${!samples[@]}"; do
         continue
     fi # closing statement
 
-    "$KRAKEN2" --db "$KRAKEN_DB" \
+    kraken2 --db "$KRAKEN_DB" \
         --threads $SLURM_CPUS_PER_TASK \
         --paired "${sample}_1_trimmed_paired.fastq.gz" "${sample}_2_trimmed_paired.fastq.gz" \
         --output "${sample}.kraken.out" \
         --report "${sample}.kraken.report" \
          --use-names
 
+    echo "End: $(date)"
 done
 
 echo "All samples have been processed. End time: $(date)"

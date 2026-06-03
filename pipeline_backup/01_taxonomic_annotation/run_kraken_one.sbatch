@@ -5,20 +5,16 @@
 #SBATCH --mem=250G
 #SBATCH -t 04:00:00
 #SBATCH --partition=main
-#SBATCH --error=${LOG_DIR:-.}/kraken_one_%j.err
-#SBATCH --output=${LOG_DIR:-.}/kraken_one_%j.out
+#SBATCH --error=/mnt/tank/scratch/ris/SRR_files/Logs/kraken_one_%j.err
+#SBATCH --output=/mnt/tank/scratch/ris/SRR_files/Logs/kraken_one_%j.out
 
-set -euo pipefail
+source /nfs/home/ris/miniforge3/etc/profile.d/mamba.sh
+mamba activate snakemake
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-source "${REPO_ROOT}/config.sh"
-
-cd "$SRR_FILES_DIR"
-activate_env
-
-
+cd /mnt/tank/scratch/ris/SRR_files
+KRAKEN_DB="/mnt/tank/scratch/ris/databases/kraken2"
 sample=$(ls *_1_trimmed_paired.fastq.gz | head -1 | sed 's/_1_trimmed_paired.fastq.gz//')
-"$KRAKEN2" --db "$KRAKEN2_DB" --threads $SLURM_CPUS_PER_TASK --paired \
+kraken2 --db "$KRAKEN_DB" --threads $SLURM_CPUS_PER_TASK --paired \
   ${sample}_1_trimmed_paired.fastq.gz ${sample}_2_trimmed_paired.fastq.gz \
   --output ${sample}_kraken_test.out --report ${sample}_kraken_test.report --use-names
   

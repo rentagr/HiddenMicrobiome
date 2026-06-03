@@ -3,15 +3,10 @@
 #SBATCH -n 1
 #SBATCH --mem=8G
 #SBATCH -t 0:30:00
-#SBATCH --output=${LOG_DIR:-.}/copy_kmers_%j.out
-#SBATCH --error=${LOG_DIR:-.}/copy_kmers_%j.err
 
-set -euo pipefail
+cd /mnt/tank/scratch/ris/SRR_files/validate
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-source "${REPO_ROOT}/config.sh"
-
-cd "$SRR_FILES_DIR/validate" 
+# Create directory for kmers
 mkdir -p wd_unique_train/kmers/kmers
 
 # Copy kmers for all training samples (names with _r1)

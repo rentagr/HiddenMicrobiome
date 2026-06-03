@@ -5,17 +5,19 @@
 #SBATCH --mem=60G
 #SBATCH -t 04:00:00
 #SBATCH --partition=main
-#SBATCH --error=/mnt/tank/scratch/ris/SRR_files/Logs/metaphlan_one_%j.err
-#SBATCH --output=/mnt/tank/scratch/ris/SRR_files/Logs/metaphlan_one_%j.out
+#SBATCH --error=${LOG_DIR:-.}/metaphlan_one_%j.err
+#SBATCH --output=${LOG_DIR:-.}/metaphlan_one_%j.out
 
-source /nfs/home/ris/miniforge3/etc/profile.d/mamba.sh
-mamba activate snakemake
+set -euo pipefail
 
-cd /mnt/tank/scratch/ris/SRR_files
-METAPHLAN_DB="/mnt/tank/scratch/ris/databases/metaphlan"
-METAPHLAN_INDEX="mpa_vJan25_CHOCOPhlAnSGB_202503"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "${REPO_ROOT}/config.sh"
+
+cd "$SRR_FILES_DIR"
+activate_env
+
 sample=$(ls *_1_trimmed_paired.fastq.gz | head -1 | sed 's/_1_trimmed_paired.fastq.gz//')
-metaphlan ${sample}_1_trimmed_paired.fastq.gz,${sample}_2_trimmed_paired.fastq.gz \
+"$METAPHLAN" ${sample}_1_trimmed_paired.fastq.gz,${sample}_2_trimmed_paired.fastq.gz \
   --input_type fastq --nproc $SLURM_CPUS_PER_TASK \
   --db_dir "$METAPHLAN_DB" -x "$METAPHLAN_INDEX" \
   --mapout ${sample}_mapout.sam -o ${sample}_metaphlan_test.txt

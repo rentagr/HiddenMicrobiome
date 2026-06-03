@@ -4,21 +4,17 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=8G
 #SBATCH -t 06:00:00
-#SBATCH --error=${LOG_DIR:-.}/trimmomatic_%j_%a.err
-#SBATCH --output=${LOG_DIR:-.}/trimmomatic_%j_%a.out
+#SBATCH --error=/mnt/tank/scratch/ris/SRR_files/Logs/trimmomatic_%j_%a.err
+#SBATCH --output=/mnt/tank/scratch/ris/SRR_files/Logs/trimmomatic_%j_%a.out
 
-set -euo pipefail
-
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-source "${REPO_ROOT}/config.sh"
-
-cd "$SRR_FILES_DIR"
-activate_env
+cd /mnt/tank/scratch/ris/SRR_files
+source /nfs/home/ris/miniforge3/etc/profile.d/mamba.sh
+mamba activate snakemake
 
 samples=($(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'))
 sample=${samples[$SLURM_ARRAY_TASK_ID-1]}
 
-"$TRIMMOMATIC" PE -threads 2 \ PE -threads 2 \
+trimmomatic PE -threads 2 \
   ${sample}_1.fastq.gz ${sample}_2.fastq.gz \
   ${sample}_1_trimmed_paired.fastq.gz ${sample}_1_trimmed_unpaired.fastq.gz \
   ${sample}_2_trimmed_paired.fastq.gz ${sample}_2_trimmed_unpaired.fastq.gz \

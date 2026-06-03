@@ -7,13 +7,15 @@
 #SBATCH --mem=32G
 #SBATCH -t 24:00:00
 
-set -euo pipefail
+set -e
+set -u
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-source "${REPO_ROOT}/config.sh"
+cd /mnt/tank/scratch/ris/SRR_files || exit 1
 
-cd "$SRR_FILES_DIR"
-activate_env
+source /nfs/home/ris/miniforge3/etc/profile.d/mamba.sh
+mamba activate snakemake
+
+echo "Mash started at $(date)"
 
 MASH_WD="mash_output"
 mkdir -p "$MASH_WD"
@@ -28,7 +30,8 @@ for r1 in *_1_trimmed_paired.fastq.gz; do
 done
 
 # Combine all the sketches into one file
-"$MASH" sketch -o "$MASH_WD/all_sketches" "$MASH_WD"/*.msh
+mash sketch -o "$MASH_WD/all_sketches" "$MASH_WD"/*.msh
 
 # Building a distance matrix
-"$MASH" dist "$MASH_WD/all_sketches.msh" "$MASH_WD/all_sketches.msh" > "$MASH_WD/distances.tab"
+mash dist "$MASH_WD/all_sketches.msh" "$MASH_WD/all_sketches.msh" > "$MASH_WD/distances.tab"
+echo " Mash finished at $(date)"

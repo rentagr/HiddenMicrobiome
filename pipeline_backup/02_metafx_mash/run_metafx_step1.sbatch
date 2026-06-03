@@ -1,4 +1,3 @@
-#!/bin/bash
 #SBATCH -J metafx_step1
 #SBATCH --output=/mnt/tank/scratch/ris/SRR_files/Logs/metafx_step1_%j.out
 #SBATCH --error=/mnt/tank/scratch/ris/SRR_files/Logs/metafx_step1_%j.err
@@ -7,13 +6,13 @@
 #SBATCH --mem=128G
 #SBATCH -t 24:00:00
 
-set -euo pipefail
+set -e
+set -u
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-source "${REPO_ROOT}/config.sh"
+cd /mnt/tank/scratch/ris/SRR_files || exit 1
 
-cd "$SRR_FILES_DIR"
-activate_env
+source /nfs/home/ris/miniforge3/etc/profile.d/mamba.sh
+mamba activate snakemake
 
 # Creating links sample_r1.fastq.gz / sample_r2.fastq.gz
 for r1 in *_1_trimmed_paired.fastq.gz; do
@@ -51,4 +50,4 @@ with open("sample_categories.txt", "w") as f:
 EOF
 
 # 3. Launch metafx unique (without --kmers-dir) – it will calculate kmers by itself
-"$METAFX" unique -t $SLURM_CPUS_PER_TASK -m 2G -w wd_unique -k 31 -i sample_categories.txt
+metafx unique -t 16 -m 2G -w wd_unique -k 31 -i sample_categories.txt

@@ -4,12 +4,16 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=16G
 #SBATCH -t 24:00:00
-#SBATCH --error=/mnt/tank/scratch/ris/SRR_files/Logs/fastqc_parse_%j.err
-#SBATCH --output=/mnt/tank/scratch/ris/SRR_files/Logs/fastqc_parse_%j.out
+#SBATCH --error=${LOG_DIR:-.}/fastqc_parse_%j.err
+#SBATCH --output=${LOG_DIR:-.}/fastqc_parse_%j.out
 
-cd /mnt/tank/scratch/ris/SRR_files
-source /nfs/home/ris/miniforge3/etc/profile.d/mamba.sh
-mamba activate snakemake
+set -euo pipefail
 
-fastqc --threads 2 *.fastq.gz
-python parse_fastqc.py
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+source "${REPO_ROOT}/config.sh"
+
+cd "$SRR_FILES_DIR"
+activate_env
+
+"$FASTQC" --threads 2 *.fastq.gz
+python "$(dirname "${BASH_SOURCE[0]}")/parse_fastqc.py"
